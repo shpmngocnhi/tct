@@ -1,0 +1,8 @@
+DC*
+DR*
+env/
+*.qkview
+*.conf
+*.sqlite3
+__pycache__/
+.DS_Store
