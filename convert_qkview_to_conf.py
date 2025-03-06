@@ -5,11 +5,12 @@ import os
 
 def convert_qkview_to_conf(qkview_file):
     folder_path = qkview_file.replace('.qkview', '').replace('qkview/', '')
-    print(folder_path)
-    os.makedirs(folder_path, exist_ok=True)
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
-    path = f'{folder_path}.conf'
-    with open(path, 'w', encoding='utf-8') as f:
+    bigip_conf_path = f'{folder_path}/{folder_path}.conf'
+   
+    with open(bigip_conf_path, 'w', encoding='utf-8') as f:
         f.write('')
 
     with tarfile.open(qkview_file, "r:*") as tar:
@@ -18,14 +19,14 @@ def convert_qkview_to_conf(qkview_file):
                 f = tar.extractfile(member)
                 if f:
                     config_data = f.read().decode('utf-8')
-                    with open(path, encoding='utf-8') as f:
+                    with open(bigip_conf_path, encoding='utf-8') as f:
                         data_conf = f.read()
 
                         if config_data not in data_conf:
-                            with open(path, 'a', encoding='utf-8') as f:
+                            with open(bigip_conf_path, 'a', encoding='utf-8') as f:
                                 f.write(config_data)
 
-    return path
+    return bigip_conf_path
 
 if __name__ == "__main__":
     qkview_paths = glob('qkview/*.qkview')
